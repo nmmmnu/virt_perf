@@ -19,6 +19,8 @@ auto user_map_template(const uint64_t *begin, const uint64_t *end, Reducer &r){
 
 template<typename Reducer>
 auto user_map_whole_template(const uint64_t *begin, const uint64_t *end, Reducer &r){
+	r.result = 0;
+
 	r.map_range(begin, end);
 
 	return r.result;

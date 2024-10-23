@@ -23,6 +23,8 @@ std::size_t user_map(const uint64_t *begin, const uint64_t *end, BaseReducer &r)
 }
 
 std::size_t user_map_whole(const uint64_t *begin, const uint64_t *end, BaseReducer &r){
+	r.result = 0;
+
 	r.map_range(begin, end);
 
 	return r.result;
