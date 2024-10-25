@@ -9,15 +9,15 @@ void CountReducer::map_range(const uint64_t *begin, const uint64_t *end){
 }
 
 void SumReducer::map(uint64_t a){
-        map_(a);
+	map_(a);
 }
 
 void SumReducer::map_range(const uint64_t *begin, const uint64_t *end){
-    for(auto it = begin; it != end; ++it)
-        map_(*it);
+	for(auto it = begin; it != end; ++it)
+		map_(*it);
 }
 
 void SumReducer::map_(uint64_t a){
-        result += a;
+	result += a;
 }
 

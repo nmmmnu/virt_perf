@@ -26,32 +26,57 @@ auto user_map_whole_template(const uint64_t *begin, const uint64_t *end, Reducer
 	return r.result;
 }
 
+struct DSumReducer{
+	uint64_t result = 0;
+
+	constexpr void map(uint64_t a){
+		map_(a);
+	}
+
+	constexpr void map_range(const uint64_t *begin, const uint64_t *end){
+		for(auto it = begin; it != end; ++it)
+			map_(*it);
+	}
+
+private:
+	constexpr void map_(uint64_t a){
+		result += a;
+	}
+};
 
 #include <iostream>
 
-template<typename Reducer, typename Container>
+template<bool ALL = true, typename Reducer, typename Container>
 void test(const char *name, Reducer cr, Container const &v, Perf &p){
 	std::cout << name << '\n';
+
+	if constexpr(ALL){
 
 	p.reset();
 	user_map(v.data(), v.data() + v.size(), cr);
 	std::cout << cr.result << '\n';
-	std::cout << "Time: " << p() << " microseconds" << '\n';
+	std::cout << "Time virt map: " << p() << " microseconds" << '\n';
+
+	}
 
 	p.reset();
 	user_map_template(v.data(), v.data() + v.size(), cr);
 	std::cout << cr.result << '\n';
-	std::cout << "Time: " << p() << " microseconds" << '\n';
+	std::cout << "Time temp map: " << p() << " microseconds" << '\n';
+
+	if constexpr(ALL){
 
 	p.reset();
 	user_map_whole(v.data(), v.data() + v.size(), cr);
 	std::cout << cr.result << '\n';
-	std::cout << "Time: " << p() << " microseconds" << '\n';
+	std::cout << "Time virt all: " << p() << " microseconds" << '\n';
+
+	}
 
 	p.reset();
 	user_map_whole_template(v.data(), v.data() + v.size(), cr);
 	std::cout << cr.result << '\n';
-	std::cout << "Time: " << p() << " microseconds" << '\n';
+	std::cout << "Time temp all: " << p() << " microseconds" << '\n';
 }
 
 #include <numeric>
@@ -65,5 +90,6 @@ int main() {
 
 	test("Count",	CountReducer{},	v, p);
 	test("Sum",	SumReducer{},	v, p);
+	test<0>("DSum",	DSumReducer{},	v, p);
 }
 
